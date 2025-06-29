@@ -121,7 +121,8 @@ import "./PrimaryDistribution.sol";
             projectId,
             name,
             symbol,
-            metadata
+            metadata,
+            msg.sender
         );
         
         // Store project information

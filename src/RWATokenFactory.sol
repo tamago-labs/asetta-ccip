@@ -29,7 +29,8 @@ contract RWATokenFactory {
         uint256 projectId,
         string memory name,
         string memory symbol,
-        RWAToken.AssetMetadata memory metadata
+        RWAToken.AssetMetadata memory metadata,
+        address projectOwner
     ) external returns (address tokenAddress) {
         require(bytes(name).length > 0, "Name required");
         require(bytes(symbol).length > 0, "Symbol required");
@@ -39,7 +40,7 @@ contract RWATokenFactory {
             name,
             symbol,
             metadata,
-            msg.sender
+           projectOwner
         );
          
         tokenAddress = address(token);

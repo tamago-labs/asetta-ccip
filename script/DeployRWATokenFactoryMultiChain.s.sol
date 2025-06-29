@@ -62,7 +62,8 @@ contract DeployRWATokenFactoryMultiChain is Script {
             999, // Test project ID
             string.concat("Test RWA Token ", chainName),
             string.concat("TEST", vm.toString(block.chainid)),
-            testMetadata
+            testMetadata,
+            deployer
         );
         
         // Stop broadcasting
