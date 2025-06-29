@@ -94,8 +94,7 @@ contract RWATokenTest is Test {
     }
 
     function test_forkSupportNewRWAToken() public {
- 
-
+  
         // Step 4) Deploy BurnMintTokenPool on Ethereum Sepolia
         vm.selectFork(ethSepoliaFork);
         ethSepoliaNetworkDetails = ccipLocalSimulatorFork.getNetworkDetails(block.chainid);
@@ -111,22 +110,20 @@ contract RWATokenTest is Test {
             ethSepoliaNetworkDetails.routerAddress
         );
         vm.stopPrank();
-
-        // Skip deployment on Avalanche Fuji as likely some issues on live CCIP contracts with the simulator
-
+ 
         // Step 5) Deploy BurnMintTokenPool on Avalanche Fuji
-        // vm.selectFork(avalancheFujiFork);
-        // avalancheFujiNetworkDetails = ccipLocalSimulatorFork.getNetworkDetails(block.chainid);
+        vm.selectFork(avalancheFujiFork);
+        avalancheFujiNetworkDetails = ccipLocalSimulatorFork.getNetworkDetails(block.chainid);
 
-        // vm.startPrank(alice);
-        // burnMintTokenPoolAvalancheFuji = new BurnMintTokenPool(
-        //     IBurnMintERC20(address(rwaTokenAvalancheFuji)),
-        //     localTokenDecimals,
-        //     allowlist,
-        //     avalancheFujiNetworkDetails.rmnProxyAddress,
-        //     avalancheFujiNetworkDetails.routerAddress
-        // );
-        // vm.stopPrank();
+        vm.startPrank(alice);
+        burnMintTokenPoolAvalancheFuji = new BurnMintTokenPool(
+            IBurnMintERC20(address(rwaTokenAvalancheFuji)),
+            localTokenDecimals,
+            allowlist,
+            avalancheFujiNetworkDetails.rmnProxyAddress,
+            avalancheFujiNetworkDetails.routerAddress
+        );
+        vm.stopPrank();
  
         // Step 6) Deploy BurnMintTokenPool on Arbitrum Sepolia
         vm.selectFork(arbitrumSepoliaFork);
@@ -152,18 +149,17 @@ contract RWATokenTest is Test {
         vm.stopPrank();
  
         // Step 8) Grant Mint and Burn roles to BurnMintTokenPool on Avalanche Fuji
-        // vm.selectFork(avalancheFujiFork);
+        vm.selectFork(avalancheFujiFork);
 
-        // vm.startPrank(alice);
-        // rwaTokenAvalancheFuji.grantRole(
-        //     rwaTokenAvalancheFuji.MINTER_ROLE(), address(burnMintTokenPoolAvalancheFuji)
-        // );
-        // rwaTokenAvalancheFuji.grantRole(
-        //     rwaTokenAvalancheFuji.BURNER_ROLE(), address(burnMintTokenPoolAvalancheFuji)
-        // );
-        // vm.stopPrank();
+        vm.startPrank(alice);
+        rwaTokenAvalancheFuji.grantRole(
+            rwaTokenAvalancheFuji.MINTER_ROLE(), address(burnMintTokenPoolAvalancheFuji)
+        );
+        rwaTokenAvalancheFuji.grantRole(
+            rwaTokenAvalancheFuji.BURNER_ROLE(), address(burnMintTokenPoolAvalancheFuji)
+        );
+        vm.stopPrank();
  
-
         // Step 9) Grant Mint and Burn roles to BurnMintTokenPool on Arbitrum Sepolia
         vm.selectFork(arbitrumSepoliaFork);
 
@@ -186,18 +182,16 @@ contract RWATokenTest is Test {
         registryModuleOwnerCustomEthSepolia.registerAdminViaGetCCIPAdmin(address(rwaTokenEthSepolia));
         vm.stopPrank();
 
-        console.log("Step 11...");
-
         // Step 11) Claim Admin role on Avalanche Fuji
-        // vm.selectFork(avalancheFujiFork);
+        vm.selectFork(avalancheFujiFork);
 
-        // RegistryModuleOwnerCustom registryModuleOwnerCustomAvalancheFuji =
-        //     RegistryModuleOwnerCustom(avalancheFujiNetworkDetails.registryModuleOwnerCustomAddress);
+        RegistryModuleOwnerCustom registryModuleOwnerCustomAvalancheFuji =
+            RegistryModuleOwnerCustom(avalancheFujiNetworkDetails.registryModuleOwnerCustomAddress);
 
-        // vm.startPrank(alice);
-        // registryModuleOwnerCustomAvalancheFuji.registerAdminViaGetCCIPAdmin(address(rwaTokenAvalancheFuji));
-        // vm.stopPrank();
- 
+        vm.startPrank(alice);
+        registryModuleOwnerCustomAvalancheFuji.registerAdminViaGetCCIPAdmin(address(rwaTokenAvalancheFuji));
+        vm.stopPrank();
+
         // Step 12) Claim Admin role on Arbitrum Sepolia
         vm.selectFork(arbitrumSepoliaFork);
 
@@ -218,19 +212,17 @@ contract RWATokenTest is Test {
         vm.startPrank(alice);
         tokenAdminRegistryEthSepolia.acceptAdminRole(address(rwaTokenEthSepolia));
         vm.stopPrank();
- 
 
         // Step 14) Accept Admin role on Avalanche Fuji
-        // vm.selectFork(avalancheFujiFork);
+        vm.selectFork(avalancheFujiFork);
 
-        // TokenAdminRegistry tokenAdminRegistryAvalancheFuji =
-        //     TokenAdminRegistry(avalancheFujiNetworkDetails.tokenAdminRegistryAddress);
+        TokenAdminRegistry tokenAdminRegistryAvalancheFuji =
+            TokenAdminRegistry(avalancheFujiNetworkDetails.tokenAdminRegistryAddress);
 
-        // vm.startPrank(alice);
-        // tokenAdminRegistryAvalancheFuji.acceptAdminRole(address(rwaTokenAvalancheFuji));
-        // vm.stopPrank();
+        vm.startPrank(alice);
+        tokenAdminRegistryAvalancheFuji.acceptAdminRole(address(rwaTokenAvalancheFuji));
+        vm.stopPrank();
  
-
         // Step 15) Accept Admin role on Arbitrum Sepolia
         vm.selectFork(arbitrumSepoliaFork);
 
@@ -247,18 +239,15 @@ contract RWATokenTest is Test {
         vm.startPrank(alice);
         tokenAdminRegistryEthSepolia.setPool(address(rwaTokenEthSepolia), address(burnMintTokenPoolEthSepolia));
         vm.stopPrank();
- 
 
         // Step 17) Link token to pool on Avalanche Fuji
-        // vm.selectFork(avalancheFujiFork);
+        vm.selectFork(avalancheFujiFork);
 
-        // vm.startPrank(alice);
-        // tokenAdminRegistryAvalancheFuji.setPool(
-        //     address(rwaTokenAvalancheFuji), address(burnMintTokenPoolAvalancheFuji)
-        // );
-        // vm.stopPrank();
-
-        console.log("Step 18...");
+        vm.startPrank(alice);
+        tokenAdminRegistryAvalancheFuji.setPool(
+            address(rwaTokenAvalancheFuji), address(burnMintTokenPoolAvalancheFuji)
+        );
+        vm.stopPrank();
 
         // Step 18) Link token to pool on Arbitrum Sepolia
         vm.selectFork(arbitrumSepoliaFork);
@@ -268,7 +257,6 @@ contract RWATokenTest is Test {
             address(rwaTokenArbitrumSepolia), address(burnMintTokenPoolArbitrumSepolia)
         );
         vm.stopPrank();
- 
 
         // Step 19) Configure Token Pool on Ethereum Sepolia (connect to Avalanche Fuji and Arbitrum Sepolia)
         vm.selectFork(ethSepoliaFork);
@@ -301,39 +289,8 @@ contract RWATokenTest is Test {
         uint64[] memory remoteChainSelectorsToRemove = new uint64[](0);
         burnMintTokenPoolEthSepolia.applyChainUpdates(remoteChainSelectorsToRemove, chainsEthSepolia);
         vm.stopPrank();
- 
-        // Step 20) Configure Token Pool on Avalanche Fuji (connect to Ethereum Sepolia and Arbitrum Sepolia)
-        // vm.selectFork(avalancheFujiFork);
-
-        // vm.startPrank(alice);
-        // TokenPool.ChainUpdate[] memory chainsAvalanche = new TokenPool.ChainUpdate[](2);
-        
-        // // Connection to Ethereum Sepolia
-        // bytes[] memory remotePoolAddressesEthSepolia = new bytes[](1);
-        // remotePoolAddressesEthSepolia[0] = abi.encode(address(burnMintTokenPoolEthSepolia));
-        // chainsAvalanche[0] = TokenPool.ChainUpdate({
-        //     remoteChainSelector: ethSepoliaNetworkDetails.chainSelector,
-        //     remotePoolAddresses: remotePoolAddressesEthSepolia,
-        //     remoteTokenAddress: abi.encode(address(rwaTokenEthSepolia)),
-        //     outboundRateLimiterConfig: RateLimiter.Config({isEnabled: true, capacity: 100_000, rate: 167}),
-        //     inboundRateLimiterConfig: RateLimiter.Config({isEnabled: true, capacity: 100_000, rate: 167})
-        // });
-
-        // // Connection to Arbitrum Sepolia
-        // bytes[] memory remotePoolAddressesArbitrumFromAvalanche = new bytes[](1);
-        // remotePoolAddressesArbitrumFromAvalanche[0] = abi.encode(address(burnMintTokenPoolArbitrumSepolia));
-        // chainsAvalanche[1] = TokenPool.ChainUpdate({
-        //     remoteChainSelector: arbitrumSepoliaNetworkDetails.chainSelector,
-        //     remotePoolAddresses: remotePoolAddressesArbitrumFromAvalanche,
-        //     remoteTokenAddress: abi.encode(address(rwaTokenArbitrumSepolia)),
-        //     outboundRateLimiterConfig: RateLimiter.Config({isEnabled: true, capacity: 100_000, rate: 167}),
-        //     inboundRateLimiterConfig: RateLimiter.Config({isEnabled: true, capacity: 100_000, rate: 167})
-        // });
-
-        // burnMintTokenPoolAvalancheFuji.applyChainUpdates(remoteChainSelectorsToRemove, chainsAvalanche);
-        // vm.stopPrank();
- 
-        // Step 21) Configure Token Pool on Arbitrum Sepolia (connect to Ethereum Sepolia and Avalanche Fuji)
+  
+        // Step 20) Configure Token Pool on Arbitrum Sepolia (connect to Ethereum Sepolia and Avalanche Fuji)
         vm.selectFork(arbitrumSepoliaFork);
 
         vm.startPrank(alice);
@@ -364,7 +321,7 @@ contract RWATokenTest is Test {
         burnMintTokenPoolArbitrumSepolia.applyChainUpdates(remoteChainSelectorsToRemove, chainsArbitrum);
         vm.stopPrank();
  
-        // Step 22) Test transfer from Ethereum Sepolia to Arbitrum Sepolia
+        // Step 21) Test transfer from Ethereum Sepolia to Arbitrum Sepolia
         vm.selectFork(ethSepoliaFork);
 
         address linkSepolia = ethSepoliaNetworkDetails.linkAddress;
