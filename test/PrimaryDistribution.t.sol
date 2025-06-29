@@ -15,7 +15,7 @@ contract PrimaryDistributionTest is Test {
     RWAToken public rwaToken;
     MockUSDC public usdc;
     
-    address public admin = makeAddr("admin");
+    address public admin = makeAddr("admin"); 
     address public projectOwner = makeAddr("projectOwner");
     address public projectTreasury = makeAddr("projectTreasury");
     address public platformTreasury = makeAddr("platformTreasury");
@@ -71,7 +71,8 @@ contract PrimaryDistributionTest is Test {
         rwaToken = new RWAToken(
             "Tokyo Real Estate Token",
             "TRET",
-            metadata
+            metadata,
+            projectOwner
         );
         
         // Mint tokens to project owner for distribution

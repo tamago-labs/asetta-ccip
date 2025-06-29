@@ -51,7 +51,8 @@ contract RWAToken is IBurnMintERC20, ERC20Burnable, AccessControl {
     constructor(
         string memory name_,
         string memory symbol_,
-        AssetMetadata memory metadata_
+        AssetMetadata memory metadata_,
+        address project_owner_
     ) ERC20(name_, symbol_) {
         // Validate inputs
         if (bytes(metadata_.assetType).length == 0) revert InvalidAssetType();
@@ -61,10 +62,11 @@ contract RWAToken is IBurnMintERC20, ERC20Burnable, AccessControl {
         assetData = metadata_;
         assetData.createdAt = block.timestamp;
         
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);
-        _grantRole(BURNER_ROLE, msg.sender);
-        i_CCIPAdmin = msg.sender;
+        _grantRole(DEFAULT_ADMIN_ROLE, project_owner_); 
+        _grantRole(MINTER_ROLE, project_owner_); 
+        _grantRole(BURNER_ROLE, project_owner_); 
+
+        i_CCIPAdmin = project_owner_;
     }
 
     // ============ Core Functions ============

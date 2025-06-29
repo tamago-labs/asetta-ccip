@@ -64,7 +64,8 @@ contract RWATokenTest is Test {
         rwaTokenEthSepolia = new RWAToken(
             "NYC Real Estate Token",
             "NYCRE",
-            metadata
+            metadata,
+            alice
         );
         vm.stopPrank();
  
@@ -76,7 +77,8 @@ contract RWATokenTest is Test {
         rwaTokenAvalancheFuji = new RWAToken(
             "NYC Real Estate Token",
             "NYCRE",
-            metadata
+            metadata,
+            alice
         );
         vm.stopPrank();
  
@@ -88,7 +90,8 @@ contract RWATokenTest is Test {
         rwaTokenArbitrumSepolia = new RWAToken(
             "NYC Real Estate Token",
             "NYCRE",
-            metadata
+            metadata,
+            alice
         );
         vm.stopPrank();
     }

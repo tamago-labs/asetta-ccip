@@ -14,6 +14,7 @@ contract RWARFQTest is Test {
     MockUSDC public usdc;
     
     address public admin = makeAddr("admin");
+    address public minter = makeAddr("minter");
     address public feeRecipient = makeAddr("feeRecipient");
     address public maker1 = makeAddr("maker1");
     address public maker2 = makeAddr("maker2");
@@ -41,6 +42,7 @@ contract RWARFQTest is Test {
     event QuoteCancelled(uint256 indexed quoteId);
     
     function setUp() public {
+
         // Deploy USDC
         usdc = new MockUSDC();
         
@@ -53,12 +55,18 @@ contract RWARFQTest is Test {
             createdAt: 0
         });
         
+        vm.prank(admin);
+ 
         rwaToken = new RWAToken(
             "Singapore Office Token",
             "SOT",
-            metadata
+            metadata,
+            admin
         );
-        
+
+        // sanity‑check
+        assertTrue(rwaToken.hasRole(rwaToken.DEFAULT_ADMIN_ROLE(), admin));
+
         // Deploy RFQ
         rfq = new RWARFQ(
             address(rwaToken),
@@ -66,12 +74,22 @@ contract RWARFQTest is Test {
             feeRecipient,
             admin
         );
+         
+        // grant MINTER_ROLE 
+        vm.stopPrank();      
+        vm.startPrank(admin);
+        rwaToken.grantRole(rwaToken.MINTER_ROLE(), minter);
+        vm.stopPrank();
+
+        vm.startPrank(minter);
         
         // Mint tokens to users
         rwaToken.mint(maker1, INITIAL_RWA_SUPPLY);
         rwaToken.mint(maker2, INITIAL_RWA_SUPPLY);
         rwaToken.mint(taker1, INITIAL_RWA_SUPPLY);
         rwaToken.mint(taker2, INITIAL_RWA_SUPPLY);
+
+        vm.stopPrank();
         
         usdc.mint(maker1, INITIAL_USDC_SUPPLY);
         usdc.mint(maker2, INITIAL_USDC_SUPPLY);
@@ -104,7 +122,7 @@ contract RWARFQTest is Test {
         uint256 rwaAmount = 100 * 1e18; // 100 RWA tokens
         uint256 pricePerToken = 10 * 1e6; // $10 per token
         uint256 duration = 1 hours;
-        
+         
         uint256 usdcRequired = (rwaAmount * pricePerToken) / 1e18; // $1000
         
         uint256 usdcBalanceBefore = usdc.balanceOf(maker1);

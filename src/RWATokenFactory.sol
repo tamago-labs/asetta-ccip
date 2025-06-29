@@ -38,10 +38,10 @@ contract RWATokenFactory {
         RWAToken token = new RWAToken(
             name,
             symbol,
-            metadata
+            metadata,
+            msg.sender
         );
-        
-        
+         
         tokenAddress = address(token);
         
         emit TokenCreated(
